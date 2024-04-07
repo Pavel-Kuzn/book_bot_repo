@@ -8,14 +8,21 @@ book: dict[int, str] = {}
 
 
 # Функция, возвращающая строку с текстом страницы и ее размер
-def _get_part_text(text: str, start: int, size: int) -> tuple[str, int]:
-    signs = [',', '.', '!', ':', ';', '?']
-    new_text = text[start:start+size]
-    for i in range(len(new_text) - 1, 0, -1):
-        if new_text[-1] in signs and text[i + 1] not in signs:
-            return (new_text, len(new_text))
-        else:
-            new_text = new_text[0:i]
+def _get_part_text(text : str, start: int, size: int) -> tuple[str, int]:
+    end_signs = ',.!:;?'
+    counter = 0
+    if len(text) < start + size:
+        size = len(text) - start
+        text = text[start:start + size]
+    else:
+        text = text[start:start + size]
+        for i in range(size - 1, 0, -1):
+            if text[i] in end_signs:
+                break
+            counter = size - i
+    page_text = text[:size - counter]
+    page_size = size - counter
+    return page_text, page_size  
 
 
 # Функция, формирующая словарь книги
