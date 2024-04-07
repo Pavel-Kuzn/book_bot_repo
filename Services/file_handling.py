@@ -20,11 +20,16 @@ def _get_part_text(text: str, start: int, size: int) -> tuple[str, int]:
 
 # Функция, формирующая словарь книги
 def prepare_book(path: str) -> None:
-    text = open(path, 'r', encoding='utf-8')
-    for i in range(len(text) / PAGE_SIZE):
-        page, leng = _get_part_text(text, 0, PAGE_SIZE)[0]
-        book['i'] = page
-        text = text[leng - 1:].lstrip()
+    with open(path, 'r', encoding='utf-8') as file:
+        text = file.read()
+    
+        start = 0
+        number = 1
+        while start < len(text):
+            page, leng = _get_part_text(text, start, PAGE_SIZE)
+            book[number] = page.strip()
+            start += leng
+            number += 1
 
 
 # Вызов функции prepare_book для подготовки книги из текстового файла
